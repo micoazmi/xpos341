@@ -1,0 +1,13 @@
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\bin\Debug\net8.0\xpos341.viewmodels.deps.json
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\bin\Debug\net8.0\xpos341.viewmodels.dll
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\bin\Debug\net8.0\xpos341.viewmodels.pdb
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\xpos341.viewmodels.GeneratedMSBuildEditorConfig.editorconfig
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\xpos341.viewmodels.AssemblyInfoInputs.cache
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\xpos341.viewmodels.AssemblyInfo.cs
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\xpos341.viewmodels.csproj.CoreCompileInputs.cache
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\xpos341.viewmodels.sourcelink.json
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\xpos341.viewmodels.dll
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\refint\xpos341.viewmodels.dll
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\xpos341.viewmodels.pdb
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\ref\xpos341.viewmodels.dll
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.viewmodels\obj\Debug\net8.0\xpos341.viewmodels.csproj.AssemblyReference.cache

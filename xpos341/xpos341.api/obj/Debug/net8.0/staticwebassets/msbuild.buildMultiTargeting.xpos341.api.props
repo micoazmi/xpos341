@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\xpos341.api.props" />
+</Project>

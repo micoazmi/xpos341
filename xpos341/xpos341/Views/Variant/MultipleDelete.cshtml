@@ -1,0 +1,82 @@
+﻿
+@{
+	ViewData["Title"] = "Multiple Delete Variant";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+		<form asp-action="SureMultipleDelete" method="post" id="form_delete">
+
+			<h3>Are you sure to delete ?</h3>
+			@foreach (var item in ViewBag.ListName)
+			{
+				<h4>@item</h4>
+			}
+
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-danger rounded-pill">Yes</button>
+				<a class="btn btn-light rounded-pill" asp-controller="Variant" asp-action="Index">No</a>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+
+<script>
+
+	$("#form_delete").validate({
+		submitHandler: function (form) {
+
+			$.ajax({
+				url: "/Variant/SureMultipleDelete",
+				type: "post",
+				// method:"get", // sama saja
+				data: { listId: listId },
+				dataType: "json",
+				success: function (response) {
+					// alert("test")
+					var data = response.dataResponse
+
+					if (data.success) {
+						// alert("test")
+						$("#my_modal").modal("hide")
+						toastr.success(
+							data.message,
+							'',
+							toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"newestOnTop": false,
+								"progressBar": false,
+								"positionClass": "toast-top-center",
+								"preventDuplicates": false,
+								"onclick": null,
+								"showDuration": "300",
+								"hideDuration": "1000",
+								"timeOut": "1000",
+								"extendedTimeOut": "1000",
+								"showEasing": "swing",
+								"hideEasing": "linear",
+								"showMethod": "fadeIn",
+								"hideMethod": "fadeOut",
+								onHidden: function () {
+									window.location.reload()
+								}
+							}
+						)
+					}
+					else {
+						toastr.errorclass(data.message)
+					}
+				}
+			})
+		}
+	})
+
+</script>
+
+

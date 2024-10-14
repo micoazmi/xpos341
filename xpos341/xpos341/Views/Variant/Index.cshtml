@@ -1,0 +1,294 @@
+﻿@using xpos341.viewmodels
+
+@model PaginatedList<VMTblVariant>
+
+@{
+	ViewData["Title"] = "Variant";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<h5 class="card-title">@ViewData["Title"]</h5>
+
+		<div class="row mb-3">
+			<div class="col-12">
+				<div class="d-flex justify-content-between">
+
+					<div>
+						<button id="btn_create" class="btn btn-primary btn-rounded">Create</button>
+						<button id="btn_multiple_delete" class="btn btn-danger btn-rounded" disabled>Hapus Multiple</button>
+						<button id="btn_reset_selection" class="btn btn-warning btn-rounded" disabled>Reset Selection</button>
+					</div>
+
+					<form asp-action="Index" asp-route-pageSize="@ViewBag.CurrentPageSize">
+						<div class="input-group w-100">
+							<input type="text" name="searchString" value="@ViewBag.CurrentFilter" class="form-control rounded-pill" placeholder="Search.." />
+							<div class="input-group-prepend">
+								<button type="submit" class="input-group-text rounded-pill" title="search">
+									<i class="fas fa-search"></i>
+								</button>
+							</div>
+							<div class="input-group-prepend">
+								<a class="input-group-text rounded-pill" asp-action="Index" title="reset">
+									<i class="fas fa-redo"></i>
+								</a>
+							</div>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+
+		<table class="table table-hover mb-3">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>No</th>
+					<th>
+						<a asp-action="Index"
+						   asp-route-sortOrder="@ViewBag.NameSort"
+						   asp-route-currentFilter="@ViewBag.CurrentFilter"
+						   asp-route-pageSize="@ViewBag.CurrentPageSize">
+							Name Variant
+						</a>
+					</th>
+					<th>Name Category</th>
+					<th>Description</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (Model.Count != 0)
+				{
+					int startNumber = (Model.PageIndex - 1) * Model.PageSize + 1;
+
+					@foreach (VMTblVariant item in Model)
+					{
+						<tr>
+							<td><input type="checkbox" onchange="selectedItem()" class="mychecked" value="@item.Id" /></td>
+							<td>@(startNumber++)</td>
+							<td>@item.NameVariant</td>
+							<td>@item.NameCategory</td>
+							<td>@item.Description</td>
+							<td>
+								<a class="btn btn-success btn_edit btn-rounded text-white" dataid="@item.Id">Edit</a>
+								<a class="btn btn-warning btn_detail btn-rounded text-white" dataid="@item.Id">Detail</a>
+								<a class="btn btn-danger btn_delete btn-rounded text-white" dataid="@item.Id">Delete</a>
+							</td>
+						</tr>
+					}
+				}
+				else
+				{
+					<tr>
+						<td>Data not found</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+	</div>
+
+	<div class="card-footer">
+		@{
+			var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+			var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+		}
+		<div class="row">
+			<div class="col-2">
+				<form asp-action="Index" asp-route-currentFilter="@ViewBag.CurrentFilter" id="form_pagesize">
+					<select name="PageSize" id="PageSize" class="form-control rounded-pill">
+						<option value="3">3</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+					</select>
+				</form>
+			</div>
+			<div class="col-10 d-flex align-items-center float-right justify-content-between">
+				Page @Model.PageIndex of @Model.TotalPages
+				<!-- Tombol Next ke Halaman Terakhir -->
+				
+				<div class=" align-items-center ">
+				<a asp-action="Index"
+				   asp-route-sortOrder="@ViewBag.CurrentSort"
+				   asp-route-pageNumber="@Model.TotalPages"
+				   asp-route-currentFilter="@ViewBag.CurrentFilter"
+				   asp-route-pageSize="@ViewBag.CurrentPageSize"
+				   class="btn btn-info float-right btn-rounded @nextDisabled">
+					Last Page
+				</a>
+
+				<a asp-action="Index"
+				   asp-route-sortOrder="@ViewBag.CurrentSort"
+				   asp-route-pageNumber="@(Model.PageIndex + 1)"
+				   asp-route-currentFilter="@ViewBag.CurrentFilter"
+				   asp-route-pageSize="@ViewBag.CurrentPageSize"
+				   class="btn btn-info float-right btn-rounded @nextDisabled">
+					Next
+				</a>
+				<a asp-action="Index"
+				   asp-route-sortOrder="@ViewBag.CurrentSort"
+				   asp-route-pageNumber="@(Model.PageIndex - 1)"
+				   asp-route-currentFilter="@ViewBag.CurrentFilter"
+				   asp-route-pageSize="@ViewBag.CurrentPageSize"
+				   class="btn btn-info float-right btn-rounded @prevDisabled">
+					Previous
+				</a>
+
+				<!-- Tombol Next ke Halaman Pertama -->
+				<a asp-action="Index"
+				   asp-route-sortOrder="@ViewBag.CurrentSort"
+				   asp-route-pageNumber="1"
+				   asp-route-currentFilter="@ViewBag.CurrentFilter"
+				   asp-route-pageSize="@ViewBag.CurrentPageSize"
+				   class="btn btn-info float-right btn-rounded @prevDisabled">
+					First Page
+				</a>
+					<span id="selectedDataInfo" class="text-muted float-right mr-2" style="display:none;"></span>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+
+	// Multiple Delete
+	var listId = JSON.parse(sessionStorage.getItem('selectedItems')) || []; // load selected id from sessionStorage
+
+	function selectedItem() {
+		var mychecked = $(".mychecked")
+		// listId = []
+		// for (var i = 0; i < mychecked.length; i++) {
+		// 	if (mychecked[i].checked) {
+		// 		listId.push(mychecked[i].value)
+		// 	}
+		// }
+
+		for (var i = 0; i < mychecked.length; i++) {
+			var value = mychecked[i].value;
+
+			// Add to listId if the checkbox is checked and not already in the list
+			if (mychecked[i].checked && !listId.includes(value)) {
+				listId.push(value)
+			}
+
+			// Remove from listId if the checkbox is unchecked
+			if (!mychecked[i].checked && listId.includes(value)) {
+				listId = listId.filter(id => id !== value)
+			}
+		}
+
+		sessionStorage.setItem('selectedItems', JSON.stringify(listId)); // save selected id to sessionStorage
+
+		if (listId.length > 0) {
+			$("#btn_multiple_delete").attr("disabled", false);
+			$("#btn_reset_selection").attr("disabled", false);
+		} else {
+			$("#btn_multiple_delete").attr("disabled", true);
+			$("#btn_reset_selection").attr("disabled", true);
+		}
+
+		// Update jumlah data yang dipilih
+		var totalData = @Model.TotalData;  // Gunakan total data dari server
+		var selectedData = listId.length;
+
+		// Tampilkan atau sembunyikan info selected data
+		if (selectedData > 0) {
+			$("#selectedDataInfo").text(`Selected ${selectedData} data of ${totalData}`).show();
+		} else {
+			$("#selectedDataInfo").hide();
+		}
+	}
+
+	$(document).ready(function () {
+		var storedListId = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
+		var mychecked = $(".mychecked");
+
+		for (var i = 0; i < mychecked.length; i++) {
+			if (storedListId.includes(mychecked[i].value)) {
+				mychecked[i].checked = true; // Select checkbox if its ID is in sessionStorage
+			}
+		}
+
+		if (storedListId.length > 0) {
+			$("#btn_multiple_delete").attr("disabled", false);
+			$("#btn_reset_selection").attr("disabled", false);
+		}
+	})
+
+	$("#btn_multiple_delete").click(function () {
+		$("#modal_body").empty()
+		$("#modal_body").load("/Variant/MultipleDelete", { listId: listId })
+		$("#my_modal").modal("show")
+	})
+
+	// $(window).on('beforeunload', function () {
+	// 	sessionStorage.removeItem('selectedItems');
+	// });
+	// end multiple delete
+
+	// Reset all checked item
+	$("#btn_reset_selection").click(function () {
+		// Clear listId array and sessionStorage
+		listId = [];
+		sessionStorage.removeItem('selectedItems');
+
+		// Uncheck all checkboxes on the current page
+		$(".mychecked").each(function () {
+			this.checked = false;
+		});
+
+		$("#btn_reset_selection").attr("disabled", true);
+		// Disable the delete button since no items are selected
+		$("#btn_multiple_delete").attr("disabled", true);
+	})
+	// End reset all checked item
+
+	// Create
+	$("#btn_create").click(function () {
+		$("#modal_body").empty()
+		$("#modal_body").load("/Variant/Create")
+		$("#my_modal").modal("show")
+	})
+
+	// Edit
+	$(".btn_edit").click(function () {
+		var id = $(this).attr("dataid")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/Variant/Edit?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+	// Detail
+	$(".btn_detail").click(function () {
+		var id = $(this).attr("dataid")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/Variant/Detail?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+	// Delete
+	$(".btn_delete").click(function () {
+		var id = $(this).attr("dataid")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/Variant/Delete?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+	$("#PageSize").val(@ViewBag.CurrentPageSize)
+
+	$("#PageSize").change(function () {
+		$("#form_pagesize").submit()
+	})
+
+
+</script>

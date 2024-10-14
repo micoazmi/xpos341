@@ -1,0 +1,155 @@
+﻿@using xpos341.Services
+@using xpos341.viewmodels
+
+@inject OrderService orderService
+
+@model List<VMOrderHeader>
+
+@{
+    List<VMOrderDetail> detail = new List<VMOrderDetail>();
+    VMSearchPage search = ViewBag.Search;
+}
+
+<style>
+
+    .card_rounded {
+        border-radius: 5%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+</style>
+
+@if (search.CodeTransaction != null || search.MinDate != DateTime.MinValue || search.MinAmount != decimal.MinValue)
+{
+    <div class="info-box bg-light">
+        <div class="info-box-content">
+            <div class="info-box-text text-muted">
+                Search Result :
+                @if (search.CodeTransaction != null)
+                {
+                    <p>Code Transaction &nbsp; : @search.CodeTransaction</p>
+                }
+                @if (search.MinDate != DateTime.MinValue)
+                {
+                    <p>Min Date &nbsp; : @search.MinDate?.ToString("dd-MM-yyyy")</p>
+                }
+                @if (search.MaxDate != DateTime.MaxValue)
+                {
+                    <p>Max Date &nbsp; : @search.MaxDate?.ToString("dd-MM-yyyy")</p>
+                }
+                @if (search.MinAmount != decimal.MinValue)
+                {
+                    <p>Min Amount &nbsp; : @search.MinAmount</p>
+                }
+                @if (search.MaxAmount != decimal.MaxValue)
+                {
+                    <p>Max Amount &nbsp; : @search.MaxAmount</p>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">History Order (@ViewBag.Count)</h3>
+        <div class="card-tools">
+            <button class="btn btn-primary btn-rounded" id="btn_search">
+                <i class="fas fa-search"></i>
+                Search
+            </button>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Order Date</th>
+                    <th>Code Transaction</th>
+                    <th>Total Qty</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.CreateDate.ToString("dd-MMMM-yyyy")</td>
+                        <td>@item.CodeTransaction</td>
+                        <td>@item.TotalQty</td>
+                        <td>Rp. @item.Amount.ToString("#,#0.00")</td>
+                        <td>
+                            <a class="btn btn-primary btn_more btn-rounded" id="btn_more_@item.Id"
+                               dataid="@item.Id" data-toggle="collapse" href="#collapse_id_@item.Id"
+                               role="button" aria-expanded="false" aria-controls="collapseExample">
+                                more
+                            </a>
+                        </td>
+                    </tr>
+                    <tr class="collapse" id="collapse_id_@item.Id">
+                        <td colspan="5">
+
+                            <div class="card card-body">
+                                @{
+                                    //detail = await orderService.ListDetails(@item.Id);
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr class="table-primary">
+                                                            <th>Product</th>
+                                                            <th>Price</th>
+                                                            <th>Qty</th>
+                                                            <th>Subtotal</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var dt in @item.ListDetails)
+                                            {
+                                                            <tr>
+                                                                <th>@dt.NameProduct</th>
+                                                                <th>Rp. @dt.Price.ToString("#,#0.00")</th>
+                                                                <th>@dt.Qty</th>
+                                                                <th>Rp. @dt.SumPrice.ToString("#,#0.00")</th>
+                                                            </tr>
+                                            }
+                                                    </tbody>
+                                                </table>
+                                }
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+    $(".btn_more").click(function(){
+        var id = $(this).attr("dataid")
+        var txt = $("#btn_more_" + id).text().trim()
+
+        if (txt == "more") {
+            $("#btn_more_" + id).text("less")
+            $("#btn_more_" + id).removeClass("btn-primary").addClass("btn-danger")
+        }
+        else {
+            $("#btn_more_" + id).text("more")
+            $("#btn_more_" + id).removeClass("btn-danger").addClass("btn-primary")
+        }
+    })
+
+    $("#btn_search").click(function () {
+        $("#modal_body").empty()
+        $("#modal_body").load("/Order/Search")
+        $("#my_modal").modal("show")
+    })
+
+</script>

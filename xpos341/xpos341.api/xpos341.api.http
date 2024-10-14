@@ -1,0 +1,6 @@
+@xpos341.api_HostAddress = http://localhost:5115
+
+GET {{xpos341.api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

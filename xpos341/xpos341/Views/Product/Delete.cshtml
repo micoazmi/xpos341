@@ -1,0 +1,98 @@
+﻿@using xpos341.datamodels
+@using xpos341.viewmodels
+
+@model VMTblProduct
+
+@{
+	ViewData["Title"] = "Delete Product";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+		<form asp-action="SureDelete" method="post" id="form_delete">
+
+			<input type="hidden" id="Id" name="Id" value="@Model.Id">
+
+			<h3>Are you sure to delete @Model.NameProduct ?</h3>
+
+
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-danger rounded-pill">Yes</button>
+				<a class="btn btn-light rounded-pill" asp-controller="Product" asp-action="Index">No</a>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+
+<script>
+
+	$("#form_delete").validate({
+		submitHandler: function (form) {
+			// var dataForm = $(form).serialize()
+
+			var id = $("#Id").val()
+
+			$.ajax({
+				url: "/Product/SureDelete",
+				type: "post",
+				// method:"get", // sama saja
+				data: { id: id },
+				dataType: "json",
+				success: function (response) {
+					var data = response.dataResponse
+
+					if (data.success) {
+						$("#my_modal").modal("hide")
+						// toastr.success(
+						// 	data.message,
+						// 	'',
+						// 	toastr.options = {
+						// 		"closeButton": true,
+						// 		"debug": false,
+						// 		"newestOnTop": false,
+						// 		"progressBar": false,
+						// 		"positionClass": "toast-top-center",
+						// 		"preventDuplicates": false,
+						// 		"onclick": null,
+						// 		"showDuration": "300",
+						// 		"hideDuration": "1000",
+						// 		"timeOut": "1000",
+						// 		"extendedTimeOut": "1000",
+						// 		"showEasing": "swing",
+						// 		"hideEasing": "linear",
+						// 		"showMethod": "fadeIn",
+						// 		"hideMethod": "fadeOut",
+						// 		onHidden: function () {
+						// 			window.location.reload()
+						// 		}
+						// 	}
+						// )
+						Swal.fire({
+							title: "Information!",
+							text: data.message,
+							icon: "success"
+						}).then(function () {
+							window.location.reload()
+						})
+					}
+					else {
+						// toastr.errorclass(data.message)
+						Swal.fire({
+							icon: "error",
+							title: "Oops...",
+							text: data.message
+						});
+					}
+				}
+			})
+		}
+	})
+
+</script>
+
+

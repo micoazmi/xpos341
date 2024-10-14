@@ -1,0 +1,62 @@
+﻿@using xpos341.datamodels
+@using xpos341.viewmodels
+
+@model VMTblCustomer
+
+@{
+	ViewData["Title"] = "Detail Customer";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+			<div class="mb-3 row">
+				<label for="NameCustomer" class="col-sm-4 col-form-label">Name Customer</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control rounded-pill" id="NameCustomer" name="NameCustomer" value="@Model.NameCustomer" readonly>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Email" class="col-sm-4 col-form-label">Email</label>
+				<div class="col-sm-8">
+					<input type="email" class="form-control rounded-pill" id="Email" name="Email" value="@Model.Email" readonly>
+					<span id="validate_Email" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Password" class="col-sm-4 col-form-label">Password</label>
+				<div class="col-sm-8">
+					<input type="password" class="form-control rounded-pill" id="Password" name="Password" value="@Model.Password" readonly>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="RoleName" class="col-sm-4 col-form-label rounded-pill">Role</label>
+				<div class="col-sm-8">
+				<input type="text" class="form-control rounded-pill" id="RoleName" name="RoleName" value="@Model.RoleName" readonly>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Phone" class="col-sm-4 col-form-label">Phone</label>
+				<div class="col-sm-8">
+					<input type="number" class="form-control rounded-pill" id="Phone" name="Phone" value="@Model.Phone" readonly>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Address" class="col-sm-4 col-form-label">Address</label>
+				<div class="col-sm-8">
+					<textarea class="form-control rounded-pill" id="Address" name="Address"readonly>@Model.Address</textarea>
+				</div>
+			</div>
+
+
+			<div class="mb-4 row">
+				<div class="col-sm-10">
+					<a class="btn btn-light rounded-pill" asp-controller="Customer" asp-action="Index">Back to List</a>
+				</div>
+			</div>
+
+	</div>
+</div>
+

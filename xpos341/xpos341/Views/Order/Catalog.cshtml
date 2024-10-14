@@ -1,0 +1,414 @@
+﻿@using System.Globalization
+@using xpos341.viewmodels
+
+@model PaginatedList<VMTblProduct>
+@*declare first load for total QTY and Estimate Price*@
+@{
+    var data = @ViewBag.dataHeader;
+
+    CultureInfo culture = new CultureInfo("id-ID");
+}
+
+<style>
+    .btn_checkout:hover {
+        background-color: #ffcc00;
+        opacity: 0.8;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        transition: 0.3s;
+    }
+
+    .card_rounded {
+        border-radius: 5%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .img_rounded {
+        border-radius: 5%;
+    }
+
+    .img_rounded:hover {
+        border-radius: 5%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+    }
+</style>
+
+<div class="row text-white text-center">
+    <div class="col-lg-4 col-6">
+        <div class="small-box bg-info rounded-pill p-2">
+            <div class="inner">
+                <h3 id="totalproduct">
+                    @{
+                        if(data != null)
+                        {
+                            <span>@data.TotalQty</span>
+                        }
+                        else
+                        {
+                            <span>0</span>
+                        }
+                    }
+                </h3>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
+            </div>
+            <a class="small-box-footer">
+                <h5>Total Product</h5>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-6">
+        <div class="small-box bg-success rounded-pill p-2">
+            <div class="inner">
+                <h3 id="estimateprice">
+                    @{
+                        if (data != null)
+                        {
+                            <span>@data.Amount</span>
+                        }
+                        else
+                        {
+                            <span>0</span>
+                        }
+                    }
+                </h3>
+            </div>
+            <div class="icon">
+                <i class="ion ion-pricetag"></i>
+            </div>
+            <a class="small-box-footer">
+                <h5>Estimate Price</h5>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-6">
+        <div class="small-box bg-warning rounded-pill p-2 btn_checkout" id="btn_checkout" style="cursor:pointer">
+            <div class="inner">
+                <h3>Checkout</h3>
+                
+                <div class="icon">
+                    <i class="ion ion-cash"></i>
+                </div>
+                <a class="small-box-footer">
+                    <h5>More info</h5>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card-header rounded-pill">
+    <div class="card-tools">
+        <button class="btn btn-primary btn-rounded" id="btn_search">
+            <i class="fas fa-search"></i>
+            Search
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    @foreach (VMTblProduct item in Model)
+    {
+        <div class="col-md-4">
+
+            <div class="card card-primary card-outline card_rounded">
+                <div class="card-body box-profile">
+                    <div class="text-center">
+                        <img class="profile-user-img img-fluid img-circle img-responsive img_rounded" src="~/images/@item.Image" alt="User profile picture">
+                    </div>
+                    <h3 class="profile-username text-center" id="name_@item.Id">@item.NameProduct</h3>
+                    <p class="text-muted text-center">@item.NameCategory / @item.NameVariant</p>
+                    <ul class="list-group list-group-unbordered mb-3">
+                        <li class="list-group-item">
+                            <b>Price</b> <a class="float-right" id="price_@item.Id">@item.Price</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Stock</b> <a class="float-right" id="stock_@item.Id">@item.Stock</a>
+                            <span class="text-danger" id="valid_stock_@item.Id"></span>
+                        </li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-4">
+                            <a id="min" dataid="@item.Id" class="btn btn-danger btn_min rounded-circle text-white" style="cursor:pointer">
+                                <b>-</b>
+                            </a>
+                        </div>
+                        <div class="col-4 text-center">
+                            <span class="text-lg" id="totalitem_@item.Id">0</span>
+                        </div>
+                        <div class="col-4">
+                            <a id="plus" dataid="@item.Id" class="btn btn-success float-right btn_plus rounded-circle text-white" style="cursor:pointer">
+                                <b>+</b>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+<div class="card-footer">
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+    <div class="row">
+        <div class="col-2">
+
+            <form asp-action="Catalog" id="form_pagesize">
+                <select name="PageSize" id="PageSize"
+                        class="form-control rounded-pill">
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="col-10">
+            Page @Model.PageIndex of @Model.TotalPages
+            <a id="aNext" asp-action="Catalog"
+               asp-route-sortOrder="@ViewBag.CurrentSort"
+               asp-route-pageNumber="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@ViewBag.CurrentFilter"
+               asp-route-pageSize="@ViewBag.CurrentPageSize"
+               class="btn btn-info float-right @nextDisabled rounded-pill">
+                Next
+            </a>
+            <a id="aPrev" asp-action="Catalog"
+               asp-route-sortOrder="@ViewBag.CurrentSort"
+               asp-route-pageNumber="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@ViewBag.CurrentFilter"
+               asp-route-pageSize="@ViewBag.CurrentPageSize"
+               class="btn btn-info float-right @prevDisabled rounded-pill">
+                Previous
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let data = {}
+
+    var totalproduct = parseInt($("#totalproduct").text())
+    var estimateprice = parseInt($("#estimateprice").text())
+    var obj = {}
+
+    //set ListCart first load
+    var ListCart = @Html.Raw(ViewBag.dataDetail)
+
+        setTransaction()
+
+    //set product choose
+    function setTransaction() {
+        if (ListCart != null) {
+            $.each(ListCart, function (index, element) {
+
+                var id = element.IdProduct
+                $("#totalitem_" + id).text(element.Qty)
+                $("#stock_" + id).text(element.Stock)
+            })
+        }
+    }
+
+    $(".btn_plus").click(function () {
+        if (ListCart == null || ListCart.length == 0) {
+            ListCart = @Html.Raw(ViewBag.dataDetail)
+            }
+
+        obj = {}
+
+        var id = parseInt($(this).attr("dataid"))
+        var idprice = "#price_" + id
+        var idtotalitem = "#totalitem_" + id
+        var idstock = "#stock_" + id
+        var idname = "#name_" + id
+
+        var totalitem = parseInt($(idtotalitem).text())
+        var price = parseInt($(idprice).text())
+        var stock = parseInt($(idstock).text())
+        var nameProduct = $(idname).text()
+
+        validateStock(id, stock)
+
+        if (stock > 0) {
+            totalproduct++
+            totalitem++
+            stock--
+            estimateprice = estimateprice + price
+
+            $("#totalproduct").text(totalproduct)
+            $("#estimateprice").text(estimateprice)
+
+            $(idstock).text(stock)
+            $(idtotalitem).text(totalitem)
+        }
+
+        obj.IdProduct = id
+        obj.Qty = totalitem
+        obj.SumPrice = price * totalitem
+        obj.Price = price
+        obj.NameProduct = nameProduct
+        obj.Stock = stock
+
+        addList(id, obj)
+
+        //console.log(ListCart)
+
+        setSession()
+    })
+
+
+    $(".btn_min").click(function () {
+        if (ListCart == null || ListCart.length == 0) {
+            ListCart = @Html.Raw(ViewBag.dataDetail)
+            }
+
+        var id = parseInt($(this).attr("dataid"))
+        var idprice = "#price_" + id
+        var idtotalitem = "#totalitem_" + id
+        var idstock = "#stock_" + id
+        var idname = "#name_" + id
+
+
+        var totalitem = parseInt($(idtotalitem).text())
+        var price = parseInt($(idprice).text())
+        var stock = parseInt($(idstock).text())
+        var nameProduct = $(idname).text()
+
+
+        if (totalitem > 0) {
+            totalproduct--
+            totalitem--
+            stock++
+            estimateprice = estimateprice - price
+
+        }
+
+        validateStock(id, stock)
+
+        $("#totalproduct").text(totalproduct)
+        $("#estimateprice").text(estimateprice)
+
+        $(idtotalitem).text(totalitem)
+        $(idstock).text(stock)
+
+        obj.IdProduct = id
+        obj.Qty = totalitem
+        obj.SumPrice = price * totalitem
+        obj.Price = price
+        obj.NameProduct = nameProduct
+        obj.Stock = stock
+
+        spliceList(id, obj)
+
+        //console.log(ListCart)
+
+        setSession()
+    })
+
+    function addList(id, obj) {
+        const index = ListCart.map(e => e.IdProduct).indexOf(id);
+
+        if (index == -1) {
+            ListCart.push(obj)
+        }
+        else {
+            ListCart[index].Qty = obj.Qty
+            ListCart[index].Stock = obj.Stock
+            ListCart[index].SumPrice = obj.SumPrice
+        }
+    }
+
+    function spliceList(id, obj) {
+        const index = ListCart.map(e => e.IdProduct).indexOf(id);
+
+        if (index != -1) {
+            ListCart[index].Qty = obj.Qty
+            ListCart[index].Stock = obj.Stock
+            ListCart[index].SumPrice = obj.SumPrice
+
+            if (obj.Qty == 0) {
+                ListCart.splice(index, 1)
+            }
+        }
+    }
+
+    function validateStock(id, stock) {
+
+        if (stock == 0) {
+            $("#valid_stock_" + id).text("out of stock")
+        }
+        else {
+            $("#valid_stock_" + id).empty()
+        }
+    }
+
+    function setSession() {
+        data = {
+            TotalQty: totalproduct,
+            Amount: estimateprice,
+            ListDetails: ListCart
+        }
+
+        data.namacustomer = ""
+        data.idcustomer = 1
+
+        $.ajax({
+            url: "/Order/SetSession",
+            data: { dataHeader: data },
+            type: "post",
+            dataType: "json",
+            success: function (respon) {
+                //alert("set session done")
+            }
+        })
+    }
+
+    $("#btn_checkout").click(function () {
+
+        data = {
+            TotalQty: totalproduct,
+            Amount: estimateprice,
+            ListDetails: ListCart
+        }
+
+        $("#modal_body").empty();
+
+        //Cara addClass
+        $(".modal-dialog").addClass("modal-lg")
+
+        if (ListCart.length > 0) {
+            $("#modal_body").load("/Order/OrderPreview", data)
+        }
+        else {
+            $("#modal_body").text("please select product before")
+        }
+        $("#my_modal").modal("show");
+    })
+
+
+
+
+    $("#btn_search").click(function () {
+        $("#modal_body").empty()
+        $("#modal_body").load("/Order/SearchMenu")
+        $("#my_modal").modal("show")
+
+        //Cara removeClass
+        $(".modal-dialog").removeClass("modal-lg")
+    })
+
+    $("#PageSize").val(@ViewBag.CurrentPageSize)
+
+    $("#PageSize").change(function () {
+        $("#form_pagesize").submit();
+    })
+
+</script>

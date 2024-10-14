@@ -1,0 +1,200 @@
+﻿@using xpos341.viewmodels
+
+@{
+	ViewData["Title"] = "Variant Try";
+}
+
+<div class=" card">
+	<div class="card-body">
+
+		<h1 class="card-title">@ViewData["Title"]</h1>
+
+		<form asp-action="Index" method="get" id="form_search">
+
+			<div class="row mb-3">
+				<div class="col-12">
+					<div class="d-flex justify-content-between">
+						<button type="button" class="btn btn-primary" id="btn_create">
+							Create
+						</button>
+
+						<div class="input-group w-50">
+							<input type="text" class="form-control" id="searchString" name="searchString" 
+							value="@ViewBag.currentFilter" placeholder="Search.." />
+							<div class="input-group-prepend">
+								<div class="input-group-text" style="cursor:pointer" id="btn_search">
+									<i class="fas fa-search"></i>
+								</div>
+							</div>
+							<div class="input-group-prepend">
+								<div class="input-group-text" style="cursor:pointer" id="btn_reset">
+									<i class="fas fa-redo"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>
+							<a asp-action="Index" asp-route-sortOrder="@ViewBag.idSort" 
+							asp-route-currentFilter="@ViewBag.currentFilter"
+							asp-route-pageNumber="@ViewBag.PageIndex"
+							asp-route-showData="@ViewBag.currentShowData">
+								Id
+							</a>
+						</th>
+						<th>
+							<a asp-action="Index" asp-route-sortOrder="@ViewBag.nameSort"
+							   asp-route-currentFilter="@ViewBag.currentFilter"
+							   asp-route-pageNumber="@ViewBag.PageIndex"
+							   asp-route-showData="@ViewBag.currentShowData">
+								Name Variant
+							</a>
+						</th>
+						<th>Name Category</th>
+						<th>Description</th>
+						<th>Create Date</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					@{
+						if(Model.Count > 0)
+						{
+							foreach (VMTblVariant item in Model)
+							{
+								<tr>
+									<td>@item.Id</td>
+									<td>@item.NameVariant</td>
+									<td>@item.NameCategory</td>
+									<td>@item.Description</td>
+									<td>@item.CreateDate.ToString("dd MMM yyyy hh:mm:ss")</td>
+									<td>
+										<a class="btn btn-primary btn_edit" data-id="@item.Id">Edit</a>
+										<a class="btn btn-success btn_detail" data-id="@item.Id">Detail</a>
+										<a class="btn btn-danger btn_delete" data-id="@item.Id">Delete</a>
+									</td>
+								</tr>
+							}
+						}
+						else
+						{
+							<span class="m-auto">Data not found</span>
+						}
+					}
+				</tbody>
+			</table>
+
+			<div class="row mb-3">
+				<div class="col-sm-12">
+					<div class="d-flex justify-content-between">
+						<div class="btn-group">
+							<div class="mr-2">
+								show
+							</div>
+							<select name="showData" id="select_show" aria-controls="zero_config" 
+									class="form-control form-control-sm w-auto">
+								<option value="3">3</option>
+								<option value="5">5</option>
+								<option value="10">10</option>
+							</select>
+							<div class="ml-2">entries from @Model.TotalData data</div>
+							<input type="hidden" name="sortOrder" id="sort_change" value="" />
+						</div>
+
+						@{
+							var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+							var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+						}
+
+						<div class="w-30">
+							Page @Model.PageIndex of @Model.TotalPages
+							<a asp-action="Index"
+								asp-route-sortOrder="@ViewBag.CurrentSort"
+								asp-route-pageNumber="@(Model.PageIndex - 1)"
+								asp-route-currentFilter="@ViewBag.CurrentFilter"
+								asp-route-showData="@ViewBag.currentShowData"
+								class="btn btn-primary @prevDisabled">
+								Previous
+							</a>
+							<a asp-action="Index"
+							   asp-route-sortOrder="@ViewBag.CurrentSort"
+							   asp-route-pageNumber="@(Model.PageIndex + 1)"
+							   asp-route-currentFilter="@ViewBag.CurrentFilter"
+							   asp-route-showData="@ViewBag.currentShowData"
+							   class="btn btn-primary @nextDisabled">
+								Next
+							</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</form>
+
+	</div>
+</div>
+
+<script>
+	// Create
+	$("#btn_create").click(function () {
+		$("#modal_body").empty()
+		$("#modal_body").load("/VariantTry/Create")
+		$("#my_modal").modal("show")
+	})
+
+	// Edit
+	$(".btn_edit").click(function () {
+		var id = $(this).data("id")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/VariantTry/Edit?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+	// Detail
+	$(".btn_detail").click(function () {
+		var id = $(this).data("id")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/VariantTry/Detail?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+	// Delete
+	$(".btn_delete").click(function () {
+		var id = $(this).data("id")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/VariantTry/Delete?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+	// Search feature
+	$("#btn_search").click(function () {
+		$("#sort_change").val("@ViewBag.CurrentSort")
+		$("#form_search").submit()
+	})
+
+	// reset feature
+	$("#btn_reset").click(function () {
+		$("#searchString").val("")
+		$("#form_search").submit()
+	})
+
+	// show data dalam 1 page default nya
+	$("#select_show").val(@ViewBag.currentShowData)
+
+	// show berapa data dalam 1 page
+	$("#select_show").change(function () {
+		$("#sort_change").val("@ViewBag.CurrentSort")
+		$("#form_search").submit()
+	})
+
+</script>

@@ -1,0 +1,197 @@
+﻿@using xpos341.datamodels
+@using xpos341.viewmodels
+
+@model VMTblCustomer
+
+@{
+	ViewData["Title"] = "Edit Customer";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+		<form asp-action="Edit" method="post" id="form_input">
+
+			<input type="hidden" id="Id" name="Id" value="@Model.Id">
+
+			<div class="mb-3 row">
+				<label for="NameCustomer" class="col-sm-4 col-form-label">Name Customer</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control rounded-pill" id="NameCustomer" name="NameCustomer" value="@Model.NameCustomer">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Email" class="col-sm-4 col-form-label">Email</label>
+				<div class="col-sm-8">
+					<input type="email" class="form-control rounded-pill" id="Email" name="Email" value="@Model.Email">
+					<span id="validate_Email" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Password" class="col-sm-4 col-form-label">Password</label>
+				<div class="col-sm-8">
+					<input type="password" class="form-control rounded-pill" id="Password" name="Password" value="@Model.Password">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="IdRole" class="col-sm-4 col-form-label rounded-pill">Role</label>
+				<div class="col-sm-8 ">
+					@Html.DropDownList("IdRole",
+											new SelectList(ViewBag.ListRole, "Id", "RoleName"),
+											"--Pilih Role--",
+											new { @class = "form-control rounded-pill" }
+											)
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Phone" class="col-sm-4 col-form-label">Phone</label>
+				<div class="col-sm-8">
+					<input type="number" class="form-control rounded-pill" id="Phone" name="Phone" value="@Model.Phone">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Address" class="col-sm-4 col-form-label">Address</label>
+				<div class="col-sm-8">
+					<textarea class="form-control rounded-pill" id="Address" name="Address" >@Model.Address</textarea>
+					@* <input type="text" class="form-control rounded-pill" id="Address" name="Address"> *@
+				</div>
+			</div>
+
+
+			<div class="mb-4 row">
+				<div class="col-sm-10">
+					<button type="submit" class="btn btn-primary rounded-pill">Submit</button>
+					<a class="btn btn-light rounded-pill" asp-controller="Customer" asp-action="Index">Back to List</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+
+<script>
+
+	$("#form_input").validate({
+		errorClass: "text-danger",
+		rules: {
+			NameCustomer: {
+				required: true,
+			},
+			Email: {
+				required: true,
+			},
+			Password: {
+				required: true,
+				minlength: 3,
+			},
+			IdRole: {
+				required: true,
+			},
+			Phone: {
+				required: true,
+				minlength: 10,
+				number: true,
+			},
+			Address: {
+				required: true,
+			},
+		},
+		messages: {
+			NameCustomer: {
+				required: "Please fill Name Customer",
+			},
+			Email: {
+				required: "Please fill Email",
+			},
+			Password: {
+				required: "Please fill Password",
+				minlength: "The password must consist of al least 3 characters",
+			},
+			IdRole: {
+				required: "Please select Role",
+			},
+			Phone: {
+				required: "Please select Phone",
+				minlength: "The Phone Number must consist of al least 10 characters",
+				number: "Please fill number only",
+			},
+			Address: {
+				required: "Please select Address",
+			},
+		},
+		submitHandler: function (form) {
+			var dataForm = $(form).serialize()
+
+			var email = $("#Email").val()
+			var id = 0
+
+			$.ajax({
+				url: "/Customer/CheckEmailIsExist",
+				type: "get",
+				// method:"get", // sama saja
+				data: { email: email, id: id },
+				dataType: "json",
+				success: function (response) {
+					if (response) {
+						$("#validate_Email").text("Email is already exists")
+						return true
+					}
+					else {
+						// alert("masuk")
+						fungsiSubmit(dataForm)
+					}
+				}
+			})
+		}
+	})
+
+	function fungsiSubmit(dataParam) {
+		debugger
+		$.ajax({
+			url: '/Customer/Edit',
+			type: "post",
+			data: dataParam,
+			dataType: "json",
+			success: function (response) {
+				var data = response.dataResponse
+
+				if (data.success) {
+					$("#my_modal").modal("hide")
+					// alert("Success")
+					toastr.success(
+						data.message,
+						'',
+						toastr.options = {
+							"closeButton": true,
+							"debug": false,
+							"newestOnTop": false,
+							"progressBar": false,
+							"positionClass": "toast-top-center",
+							"preventDuplicates": false,
+							"onclick": null,
+							"showDuration": "300",
+							"hideDuration": "1000",
+							"timeOut": "1000",
+							"extendedTimeOut": "1000",
+							"showEasing": "swing",
+							"hideEasing": "linear",
+							"showMethod": "fadeIn",
+							"hideMethod": "fadeOut",
+							onHidden: function () {
+								window.location.reload()
+							}
+						}
+					)
+				}
+				else {
+					toastr.errorClass(data.message)
+				}
+			}
+		})
+	}
+
+</script>
+

@@ -1,0 +1,36 @@
+﻿@{
+	ViewData["Title"] = "Page Friend";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<a class="btn btn-primary ms-4" asp-controller="Friend" asp-action="Create">Create</a>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Address</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Friend item in ViewBag.listFriend)
+        //foreach (Friend item in Model)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.Name</td>
+                <td>@item.Address</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="Friend" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-success" asp-controller="Friend" asp-action="Detail" asp-route-id="@item.Id">Detail</a>
+                    <a class="btn btn-danger" asp-controller="Friend" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+       
+    </tbody>
+</table>
+

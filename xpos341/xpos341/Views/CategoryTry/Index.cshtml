@@ -1,0 +1,81 @@
+﻿@using xpos341.viewmodels
+
+@{
+	ViewData["Title"] = "Category Try";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<h5 class="card-title">@ViewData["Title"]</h5>
+
+		<button type="button" class="btn btn-primary" id="btn_create">Create</button>
+
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col">No</th>
+					<th scope="col">Id</th>
+					<th scope="col">Name Category</th>
+					<th scope="col">Description</th>
+					<th scope="col">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				@{var counter = 1;}
+				@foreach (VMTblCategory item in Model)
+				{
+					<tr>
+						<td scope="row">@counter</td>
+						<td>@item.Id</td>
+						<td>@item.NameCategory</td>
+						<td>@item.Description</td>
+						<td>
+							<a class="btn btn-primary btn_edit" data-id="@item.Id">Edit</a>
+							<a class="btn btn-success btn_detail" data-id="@item.Id">Detail</a>
+							<a class="btn btn-danger btn_delete" data-id="@item.Id">Delete</a>
+							@* data-id = jquery *@
+						</td>
+					</tr>
+					counter++;
+				}
+			</tbody>
+		</table>
+
+	</div>
+</div>
+
+<script>
+	$("#btn_create").click(function () {
+		$("#modal_body").empty()
+		$("#modal_body").load("/CategoryTry/Create")
+		$("#my_modal").modal("show")
+	})
+
+	$(".btn_edit").click(function(){
+		// jquery
+		var id = $(this).data("id")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/CategoryTry/Edit?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+	$(".btn_detail").click(function(){
+		var id = $(this).data("id")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/CategoryTry/Detail?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+	$(".btn_delete").click(function () {
+		var id = $(this).data("id")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/CategoryTry/Delete?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+
+</script>

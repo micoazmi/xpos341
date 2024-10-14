@@ -1,0 +1,15 @@
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\bin\Debug\net8.0\xpos341.datamodels.deps.json
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\bin\Debug\net8.0\xpos341.datamodels.runtimeconfig.json
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\bin\Debug\net8.0\xpos341.datamodels.dll
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\bin\Debug\net8.0\xpos341.datamodels.pdb
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\xpos341.datamodels.csproj.AssemblyReference.cache
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\xpos341.datamodels.GeneratedMSBuildEditorConfig.editorconfig
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\xpos341.datamodels.AssemblyInfoInputs.cache
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\xpos341.datamodels.AssemblyInfo.cs
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\xpos341.datamodels.csproj.CoreCompileInputs.cache
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\xpos341.datamodels.sourcelink.json
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\xpos341.datamodels.dll
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\refint\xpos341.datamodels.dll
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\xpos341.datamodels.pdb
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\xpos341.datamodels.genruntimeconfig.cache
+D:\UpgradeMySelf\dotnet\repos\BATCH_341\TECHNOLOGY\xpos341\xpos341\xpos341.datamodels\obj\Debug\net8.0\ref\xpos341.datamodels.dll

@@ -1,0 +1,67 @@
+﻿@{
+	ViewData["Title"] = "Create Variant Try";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+		<form asp-action="Create" method="post" id="form_input">
+			<div class="mb-3 row">
+				<label for="NameVariant" class="col-sm-4 col-form-label">Name Variant</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="NameVariant" name="NameVariant">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="IdCategory" class="col-sm-4 col-form-label">Name Category</label>
+				<div class="col-sm-8">
+					@Html.DropDownList("IdCategory",
+						new SelectList(ViewBag.DropdownCategory, "Id", "NameCategory"),
+						"--Pilih Category--",
+						new { @class = "form-control" }
+					)
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Description" class="col-sm-4 col-form-label">Description</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="Description" name="Description">
+				</div>
+			</div>
+
+
+			<div class="mb-4 row">
+				<div class="col-sm-10">
+					<button type="submit" class="btn btn-primary">Submit</button>
+					<a class="btn btn-light" asp-controller="VariantTry" asp-action="Index">Back to List</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+<script>
+
+	// jquery validation
+	$("#form_input").validate({
+		errorClass:"text-danger",
+		rules: {
+			NameVariant: {
+				required: true,
+				minlength: 3
+			},
+			IdCategory: "required"
+		},
+		messages: {
+			NameVariant: {
+				required: "Please fill Name Variant",
+				minlength: "The name most consist of at least 3 characters"
+			},
+			IdCategory: "Please select category"
+		}
+	})
+
+</script>

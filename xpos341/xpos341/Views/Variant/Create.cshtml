@@ -1,0 +1,145 @@
+﻿
+@using xpos341.viewmodels
+
+@model VMTblVariant
+@{
+	ViewData["Title"] = "Create Variant";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+		<form asp-action="Create" method="post" id="form_input">
+			<div class="mb-3 row">
+				<label for="NameVariant" class="col-sm-4 col-form-label">Name Variant</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control rounded-pill" id="NameVariant" name="NameVariant">
+					<span id="validate_NameVariant" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="IdCategory" class="col-sm-4 col-form-label rounded-pill">Name Category</label>
+				<div class="col-sm-8 ">
+					@Html.DropDownList("IdCategory",
+						new SelectList(ViewBag.DropdownCategory, "Id", "NameCategory"),
+						"--Pilih Category--",
+						new { @class = "form-control rounded-pill" }
+					)
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Description" class="col-sm-4 col-form-label">Description</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control rounded-pill" id="Description" name="Description">
+				</div>
+			</div>
+
+
+			<div class="mb-4 row">
+				<div class="col-sm-10">
+					<button type="submit" class="btn btn-primary rounded-pill">Submit</button>
+					<a class="btn btn-light rounded-pill" asp-controller="Variant" asp-action="Index">Back to List</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+
+<script>
+
+	$("#form_input").validate({
+		errorClass: "text-danger",
+		rules: {
+			NameVariant: {
+				required: true,
+				minlength: 3,
+			},
+			IdCategory: "required"
+		},
+		messages: {
+			NameVariant: {
+				required: "Please fill Name Variant",
+				minlength: "The name must consist of al least 3 characters",
+			},
+			IdCategory: "Please select category"
+		},
+		submitHandler: function (form) {
+			var dataForm = $(form).serialize()
+
+			var name = $("#NameVariant").val()
+			var id = 0;
+			var idCategory = $("#IdCategory").val()
+			// get category name selected from html.DropdownList
+			var textCategory = $("#IdCategory option:selected").text()
+
+			$.ajax({
+				url: "/Variant/CheckNameIsExist",
+				type:"get",
+				data: { name: name, id: id, idCategory: idCategory },
+				dataType: "json",
+				success: function (response) {
+					if (response) {
+						console.log("Tes")
+						$("#validate_NameVariant").text("Name Variant is already exists in category " + textCategory)
+						return true
+					}
+					else {
+						// alert("tes")
+						fungsiSubmit(dataForm)
+					}
+				}
+			})
+		}
+	})
+
+	function fungsiSubmit(dataParam) {
+	$.ajax({
+		url: "/Variant/Create",
+		type:"post",
+		data: dataParam,
+		dataType: "json",
+		success: function (response) {
+			var data = response.dataResponse
+
+			if (data.success) {
+				$("#my_modal").modal("hide")
+				// alert("Success")
+				toastr.success(
+					data.message,
+					'',
+					toastr.options = {
+						"closeButton": true,
+						"debug": false,
+						"newestOnTop": false,
+						"progressBar": false,
+						"positionClass": "toast-top-center",
+						"preventDuplicates": false,
+						"onclick": null,
+						"showDuration": "3000",
+						"hideDuration": "2000",
+						"timeOut": "1000",
+						"extendedTimeOut": "1000",
+						"showEasing": "swing",
+						"hideEasing": "linear",
+						"showMethod": "fadeIn",
+						"hideMethod": "fadeOut",
+						onHidden: function () {
+							window.location.reload()
+						}
+					}
+				)
+			}
+			else {
+				toastr.errorClass(data.message)
+			}
+		}
+	})
+	}
+
+</script>
+
+

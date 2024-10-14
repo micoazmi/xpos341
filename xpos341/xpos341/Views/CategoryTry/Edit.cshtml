@@ -1,0 +1,43 @@
+﻿@using xpos341.viewmodels
+@model VMTblCategory
+
+@{
+	ViewData["Title"] = "Edit Category Try";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+		<form asp-action="Edit" method="post">
+
+			<input type="hidden" id="Id" name="Id" value="@Model.Id"/>
+
+			<div class="mb-3 row">
+				<label for="NameCategory" class="col-sm-4 col-form-label">Name Category</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="NameCategory" name="NameCategory" value="@Model.NameCategory">
+					<span asp-validation-for="NameCategory" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="Description" class="col-sm-4 col-form-label">Description</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="Description" name="Description" value="@Model.Description">
+					<span asp-validation-for="Description" class="text-danger"></span>
+				</div>
+			</div>
+
+
+			<div class="mb-4 row">
+				<div class="col-sm-10">
+					<button type="submit" class="btn btn-primary">Submit</button>
+					<a class="btn btn-light" asp-controller="CategoryTry" asp-action="Index">Back to List</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>
+

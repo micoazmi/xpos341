@@ -1,0 +1,132 @@
+﻿@using xpos341.datamodels
+@using xpos341.viewmodels
+
+@model VMTblRole
+
+@{
+	ViewData["Title"] = "Create Role";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+		<form asp-action="Create" method="post" id="form_input">
+			<div class="mb-3 row">
+				<label for="RoleName" class="col-sm-4 col-form-label">Role Name</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control rounded-pill" id="RoleName" name="RoleName">
+					<span id="validate_RoleName" class="text-danger"></span>
+				</div>
+			</div>
+
+
+			<div class="mb-4 row">
+				<div class="col-sm-10">
+					<button type="submit" class="btn btn-primary rounded-pill">Submit</button>
+					<a class="btn btn-light rounded-pill" asp-controller="Role" asp-action="Index">Back to List</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+
+<script>
+
+	$("#form_input").validate({
+		errorClass: "text-danger",
+		rules: {
+			RoleName: {
+				required: true,
+				minlength: 3,
+			}
+		},
+		messages: {
+			RoleName: {
+				required: "Please fill Role Name",
+				minlength: "The name must consist of al least 3 characters",
+			}
+		},
+		submitHandler: function (form) {
+			var dataForm = $(form).serialize()
+
+			var roleName = $("#RoleName").val()
+			var id = 0
+
+			$.ajax({
+				url: "/Role/CheckNameIsExist",
+				type: "get",
+				// method:"get", // sama saja
+				data: { roleName: roleName, id: id },
+				dataType: "json",
+				success: function (response) {
+					if (response) {
+						$("#validate_RoleName").text("Role Name is already exists")
+						return true
+					}
+					else {
+						// alert("masuk")
+						fungsiSubmit(dataForm)
+					}
+				}
+			})
+		}
+	})
+
+	function fungsiSubmit(dataParam) {
+		debugger
+		$.ajax({
+			url: '/Role/Create',
+			type: "post",
+			data: dataParam,
+			dataType: "json",
+			success: function (response) {
+				var data = response.dataResponse
+
+				if (data.success) {
+					$("#my_modal").modal("hide")
+					// alert("Success")
+					toastr.success(
+						data.message,
+						'',
+						toastr.options = {
+							"closeButton": true,
+							"debug": false,
+							"newestOnTop": false,
+							"progressBar": false,
+							"positionClass": "toast-top-center",
+							"preventDuplicates": false,
+							"onclick": null,
+							"showDuration": "300",
+							"hideDuration": "1000",
+							"timeOut": "1000",
+							"extendedTimeOut": "1000",
+							"showEasing": "swing",
+							"hideEasing": "linear",
+							"showMethod": "fadeIn",
+							"hideMethod": "fadeOut",
+							onHidden: function () {
+								window.location.reload()
+							}
+						}
+						// {
+						// 	timeOut:500,
+						// 	fadeOut:500,
+						// 	onHidden: function() {
+						// 		window.location.reload()
+						// 	}
+						// }
+					)
+				}
+				else {
+					toastr.errorClass(data.message)
+				}
+			}
+		})
+	}
+
+</script>
+

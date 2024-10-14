@@ -1,0 +1,170 @@
+﻿@using xpos341.datamodels
+@using xpos341.viewmodels
+
+@model PaginatedList<VMTblRole>
+
+@{
+	ViewData["Title"] = "Atur Menu Access";
+}
+
+<div class="card rounded rounded-lg">
+	<div class="card-body">
+
+		<h5 class="card-title">@ViewData["Title"]</h5>
+
+		<div class="row mb-3">
+			<div class="col-12">
+				<div class="d-flex justify-content-between">
+
+					<button id="btn_create" class="btn btn-primary btn-rounded" disabled>Create</button>
+
+					<form asp-action="Index_MenuAccess" asp-route-pageSize="@ViewBag.CurrentPageSize">
+						<div class="input-group w-100">
+							<input type="text" name="searchString" value="@ViewBag.CurrentFilter" class="form-control rounded-pill" placeholder="Search.." />
+							<div class="input-group-prepend">
+								<button type="submit" class="input-group-text rounded-pill" title="search">
+									<i class="fas fa-search"></i>
+								</button>
+							</div>
+							<div class="input-group-prepend">
+								<a class="input-group-text rounded-pill" asp-action="Index_MenuAccess" title="reset">
+									<i class="fas fa-redo"></i>
+								</a>
+							</div>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+
+		<table class="table table-hover mb-3">
+			<thead>
+				<tr>
+					<th>
+						<a asp-action="Index_MenuAccess"
+						   asp-route-sortOrder="@ViewBag.NameSort"
+						   asp-route-currentFilter="@ViewBag.CurrentFilter"
+						   asp-route-pageSize="@ViewBag.CurrentPageSize">
+							Role Name
+						</a>
+					</th>
+					<th>Created by</th>
+					<th>Created Date</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (Model.Count != 0)
+				{
+					@foreach (VMTblRole item in Model)
+					{
+						<tr>
+							<td>@item.RoleName</td>
+							<td>@item.CreatedBy</td>
+							<td>@item.CreatedDate.ToString("ddd, dd MMM yyyy HH:mm:ss")</td>
+							<td>
+								<a class="btn btn-success btn_edit btn-rounded text-white" dataid="@item.Id">Atur</a>
+								@* <a class="btn btn-warning btn_detail btn-rounded text-white" dataid="@item.Id">Detail</a>
+								<a class="btn btn-danger btn_delete btn-rounded text-white" dataid="@item.Id">Delete</a> *@
+							</td>
+						</tr>
+					}
+				}
+				else
+				{
+					<tr>
+						<td>Data not found</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+	</div>
+
+	<div class="card-footer">
+		@{
+			var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+			var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+		}
+		<div class="row">
+			<div class="col-2">
+				<form asp-action="Index_MenuAccess" asp-route-currentFilter="@ViewBag.CurrentFilter" id="form_pagesize">
+					<select name="PageSize" id="PageSize" class="form-control rounded-pill">
+						<option value="3">3</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+					</select>
+				</form>
+			</div>
+			<div class="col-10">
+				Page @Model.PageIndex of @Model.TotalPages
+				<a asp-action="Index_MenuAccess"
+				   asp-route-sortOrder="@ViewBag.CurrentSort"
+				   asp-route-pageNumber="@(Model.PageIndex + 1)"
+				   asp-route-currentFilter="@ViewBag.CurrentFilter"
+				   asp-route-pageSize="@ViewBag.CurrentPageSize"
+				   class="btn btn-info float-right btn-rounded @nextDisabled">
+					Next
+				</a>
+				<a asp-action="Index_MenuAccess"
+				   asp-route-sortOrder="@ViewBag.CurrentSort"
+				   asp-route-pageNumber="@(Model.PageIndex - 1)"
+				   asp-route-currentFilter="@ViewBag.CurrentFilter"
+				   asp-route-pageSize="@ViewBag.CurrentPageSize"
+				   class="btn btn-info float-right btn-rounded @prevDisabled">
+					Previous
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+
+	// Create
+	// $("#btn_create").click(function () {
+	// 	$("#modal_body").empty()
+	// 	$("#modal_body").load("/Role/Create")
+	// 	$("#my_modal").modal("show")
+	// })
+
+	// Edit
+	$(".btn_edit").click(function () {
+		var id = $(this).attr("dataid")
+
+		$("#modal_body").empty()
+		$("#modal_body").load("/Role/Edit_MenuAccess?id=" + id)
+		$("#my_modal").modal("show")
+	})
+
+	// Detail
+	// $(".btn_detail").click(function () {
+	// 	var id = $(this).attr("dataid")
+
+	// 	$("#modal_body").empty()
+	// 	$("#modal_body").load("/Role/Detail?id=" + id)
+	// 	$("#my_modal").modal("show")
+	// })
+
+	// // Delete
+	// $(".btn_delete").click(function () {
+	// 	var id = $(this).attr("dataid")
+
+	// 	$("#modal_body").empty()
+	// 	$("#modal_body").load("/Role/Delete?id=" + id)
+	// 	$("#my_modal").modal("show")
+	// })
+
+	$("#PageSize").val(@ViewBag.CurrentPageSize)
+
+	$("#PageSize").change(function () {
+		$("#form_pagesize").submit()
+	})
+
+
+</script>
+
+

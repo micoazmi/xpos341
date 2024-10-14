@@ -1,0 +1,45 @@
+﻿@using xpos341.datamodels
+@using xpos341.viewmodels
+
+@model VMTblRole
+
+@{
+	ViewData["Title"] = "Detail Role";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+		<div class="mb-3 row">
+			<label for="RoleName" class="col-sm-4 col-form-label">Role Name</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control rounded-pill" id="RoleName" name="RoleName" value="@Model.RoleName" readonly>
+			</div>
+		</div>
+		<div class="mb-3 row">
+			<label for="CreatedBy" class="col-sm-4 col-form-label">Created By</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control rounded-pill" id="CreatedBy" name="CreatedBy" value="@Model.CreatedBy" readonly>
+			</div>
+		</div>
+		<div class="mb-3 row">
+			<label for="CreatedDate" class="col-sm-4 col-form-label">Created Date</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control rounded-pill" id="CreatedDate" name="CreatedDate" value="@Model.CreatedDate.ToString("ddd, dd MMM yyyy HH:mm:ss")" readonly>
+			</div>
+		</div>
+
+
+		<div class="mb-4 row">
+			<div class="col-sm-10">
+				<a class="btn btn-light rounded-pill" asp-controller="Role" asp-action="Index">Back to List</a>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+

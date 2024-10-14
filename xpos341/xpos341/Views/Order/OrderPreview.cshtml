@@ -1,0 +1,142 @@
+﻿@using xpos341.viewmodels
+
+@model VMOrderHeader
+
+<div class="invoice p-3 mb-3">
+
+    <div class="row">
+        <div class="col-12">
+            <h4>
+                <i class="fas fa-globe"></i> Order Preview
+                <small class="float-right">Date: @DateTime.Now.ToString("dd MMMM yyyy")</small>
+            </h4>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-12 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListDetails)
+                    {
+                        <tr>
+                            <td>@item.NameProduct</td>
+                            <td>Rp. @item.Price.ToString("#,##0")</td>
+                            <td>@item.Qty</td>
+                            <td>Rp. @item.SumPrice.ToString("#,##0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-6">
+            <p class="lead">Payment Methods:</p>
+            <img src="~/adminmart/dist/img/credit/visa.png" alt="Visa">
+            <img src="~/adminmart/dist/img/credit/mastercard.png" alt="Mastercard">
+            <img src="~/adminmart/dist/img/credit/american-express.png" alt="American Express">
+            <img src="~/adminmart/dist/img/credit/paypal2.png" alt="Paypal">
+
+        </div>
+
+        <div class="col-6">
+            <p class="lead">Amount Due @DateTime.Now.ToString("dd MMMM yyyy")</p>
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th style="width:50%">Total Qty:</th>
+                            <td>@Model.TotalQty</td>
+                        </tr>
+                        <tr>
+                            <th>Amount:</th>
+                            <td>Rp. @Model.Amount.ToString("#,##")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row no-print">
+        <div class="col-12">
+            <button type="button" id="btn_submit_order" class="btn btn-success float-right btn-rounded">
+                <i class="far fa-credit-card"></i> Submit
+                Payment
+            </button>
+            <button type="button" class="btn btn-primary float-right btn-rounded" style="margin-right: 5px;">
+                <i class="fas fa-download"></i> Generate PDF
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#btn_submit_order").click(function () {
+
+        $.ajax({
+            url: "/Order/SubmitOrder",
+            type: "post",
+            data: { dataHeader: data },
+            dataType: "json",
+            beforeSend: function () {
+                $("#modal_load").modal("show")
+            },
+            success: function (response) {
+                // alert("tes")
+                $("#modal_load").modal("hide")
+
+                if (response.success) {
+                    $("#modal_body").modal("hide")
+
+                    Swal.fire({
+                        title: "Information!",
+                        text: response.message,
+                        icon: "success"
+                    }).then(function () {
+                        removeSession()
+                        window.location.reload()
+                    })
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: response.message
+                    });
+                }
+            }
+
+        })
+
+    })
+
+    function removeSession(){
+        $.ajax({
+            url: "/Order/RemoveSession",
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                // alert("remove session done")
+            }
+        })
+    }
+
+</script>

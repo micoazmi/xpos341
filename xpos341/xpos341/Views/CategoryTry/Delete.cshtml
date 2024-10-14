@@ -1,0 +1,28 @@
+﻿@using xpos341.viewmodels
+@model VMTblCategory
+
+@{
+	ViewData["Title"] = "Delete Category Try";
+}
+
+<div class="card">
+	<div class="card-body">
+
+		<div class="h4 mb-4">@ViewData["Title"]</div>
+
+		<form asp-action="Delete" method="post">
+
+			<input type="hidden" id="Id" name="Id" value="@Model.Id" />
+
+			<div class="mb-4">Are you sure to delete this data @Model.NameCategory?</div>
+
+			<div class="mb-4 row">
+				<div class="col-sm-10">
+					<button type="submit" class="btn btn-danger">Delete</button>
+					<a class="btn btn-light" asp-controller="CategoryTry" asp-action="Index">Back to List</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>

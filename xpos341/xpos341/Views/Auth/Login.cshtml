@@ -1,0 +1,106 @@
+﻿<!-- ============================================================== -->
+<!-- Login box.scss -->
+<!-- ============================================================== -->
+<div class="auth-wrapper d-flex no-block justify-content-center align-items-center position-relative"
+     style="background:url(/adminmart/assets/images/big/auth-bg.jpg) no-repeat center center;">
+    <div class="auth-box row">
+        <div class="col-lg-7 col-md-5 modal-bg-img" style="background-image: url(/adminmart/assets/images/big/login.jpg);">
+        </div>
+        <div class="col-lg-5 col-md-7 bg-white">
+            <div class="p-3">
+                <div class="text-center">
+                    <img src="/adminmart/assets/images/big/icon.png" alt="wrapkit">
+                </div>
+                <h2 class="mt-3 text-center">Sign In</h2>
+                <p class="text-center">Enter your email address and password to access admin panel.</p>
+                <form class="mt-4" id="form_login" method="post">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="text-dark" for="Email">Email</label>
+                                <input class="form-control rounded-pill" id="Email" name="Email" type="email"
+                                       placeholder="enter your email">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="text-dark" for="Password">Password</label>
+                                <input class="form-control rounded-pill" id="Password" name="Password" type="password"
+                                       placeholder="enter your password">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center">
+                            <button type="submit" class="btn btn-block btn-dark btn-rounded">Sign In</button>
+                        </div>
+                        <div class="col-lg-12 text-center mt-5">
+                            Don't have an account? <a class="text-danger" id="btn_register" style="cursor:pointer">Sign Up</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- Login box.scss -->
+<!-- ============================================================== -->
+
+
+<script>
+
+    $("#form_login").validate({
+        errorClass: "is-invalid text-danger",
+        rules: {
+            Email: {
+                required: true,
+                email: true,
+            },
+            Password: "required",
+        },
+        messages: {
+            Email: {
+                required: "Please fill email",
+                email: "Please fill a valid email address",
+            },
+            Password: "Please fill password",
+        },
+        submitHandler: function (form) {
+            // debugger
+            var email = $("#Email").val()
+            var password = $("#Password").val()
+
+            $.ajax({
+                url: "/Auth/LoginSubmit",
+                type: "post",
+                data: { email: email, password: password },
+                dataType: "json",
+                success: function (response) {
+
+                    var data = response.dataResponse
+
+                    if (data.success) {
+                        $("#my_modal").modal("hide")
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Welcome",
+                            text: data.message
+                        }).then(function () {
+                            window.location.reload()
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "error",
+                            title:"warning!",
+                            text: data.message
+                        })
+                    }
+
+                }
+            })
+
+        }
+    })
+
+</script>
